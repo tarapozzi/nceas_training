@@ -1,0 +1,71 @@
+---
+title: "My Analysis"
+author: "Your Name"
+format: 
+  html:
+    toc: true
+    number-sections: true
+execute:
+  message: false
+  warning: false
+bibliography: references.bib
+---
+
+# Introduction 
+
+## About the Data 
+
+# Setup 
+
+## Read in data
+
+```{r setup, echo = FALSE}
+library(readr)
+library(here)
+#library() #if you don't add a package it will show all the packages I have downloaded
+setwd("/Users/tpozzi/Documents/R-Projects/nceas/training/scripts")
+
+```
+
+```{r}
+#bg_chem <- read_csv(here::here("../data/BGchem2008data.csv"))
+bg_chem <- read_csv("../data/BGchem2008data.csv") # this doesn't work when I run in console, but it does work when I render to the doc because my comp things I am in "/Users/tpozzi/Documents/R-Projects/nceas"
+## easiest workaround? setwd in the inital chunk
+```
+
+
+```{r}
+#| eval: false
+#| echo: false
+colnames(bg_chem)
+str(bg_chem)
+head(bg_chem)
+summary(bg_chem)
+```
+
+# Analysis
+
+## Summary Statistics
+
+### Redfield Ratio
+
+```{r}
+nitrate <- mean(bg_chem$NO3)
+nitrite <- mean(bg_chem$NO2)
+amm     <- mean(bg_chem$NH4)
+phos    <- mean(bg_chem$P)
+ratio <- (nitrate + nitrite + amm) / phos
+```
+
+The Redfield ratio for this dataset is approximately `{r} round(ratio)`.
+
+## Plot
+
+```{r}
+plot(bg_chem$P, bg_chem$NO2 + bg_chem$NO3 + bg_chem$NH4)
+```
+
+# Conclusion
+
+
+
