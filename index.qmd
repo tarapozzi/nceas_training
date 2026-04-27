@@ -5,4 +5,5 @@ format: html
 
 ### Course analyses
 
-- Data Visualization (link coming soon)
+- [Data Visualization](scripts/data-visualization.html)
+
