@@ -155,4 +155,22 @@ ggplotly(facet_plot, tooltip = c('x', 'y'))
 ```
 
 
-## Show an interactive table 
+## Show an interactive map
+
+```{r}
+## Interactive Map
+
+restoration_sites <- delta_visits_raw %>%
+  janitor::clean_names() %>%
+  distinct(restore_loc = eco_restore_approximate_location,
+           latitude, longitude) %>%
+  drop_na(latitude, longitude)
+
+leaflet(restoration_sites) %>%
+  addTiles() %>%
+  addMarkers(
+    lng   = ~longitude,
+    lat   = ~latitude,
+    popup = ~restore_loc
+  )
+```
