@@ -2,7 +2,12 @@
 title: "Data Visualization"
 format: html
 ---
+
+
 ```{r}
+#| message: false
+#| warning: false
+#| 
 ### Data wrangling
 library(readr)
 library(here)      ### for robust relative file paths
@@ -10,6 +15,8 @@ library(dplyr)
 library(tidyr)
 library(forcats)   ### tools for working with factors (e.g., reordering)
 library(janitor)   ### clean column names
+library(DT)
+library(leaflet)
 
 ### Visualization
 library(ggplot2)
@@ -18,8 +25,30 @@ library(ggplot2)
 library(plotly)
 
 # read in data from the data directory after manually downloading data 
-delta_visits_raw <- read_csv(here("training/data/Socioecological_monitoring_data.csv"))
+delta_visits_raw <- read_csv(here("data/Socioecological_monitoring_data.csv"))
 
+daily_visits_loc <- delta_visits_raw %>%
+  janitor::clean_names() %>%
+  tidyr::pivot_longer(
+    cols      = c(sm_boat, med_boat, lrg_boat, bank_angler, scientist, cars),
+    names_to  = "visitor_type",
+    values_to = "quantity"
+  ) %>%
+  dplyr::rename(restore_loc = eco_restore_approximate_location) %>%
+  dplyr::select(-notes) %>%
+  dplyr::group_by(restore_loc, date, visitor_type) %>%
+  dplyr::summarize(daily_visits = sum(quantity), .groups = "drop")
+```
+
+## Interactive Table
+
+```{r}
+DT::datatable(
+  daily_visits_loc,
+  caption  = "Daily visitor counts at Delta restoration sites",
+  colnames = c("Location", "Date", "Visitor type", "Daily visits"),
+  options  = list(pageLength = 10)
+)
 ```
 
 ## Explore the data
@@ -124,3 +153,6 @@ facet_plot
 ```{r}
 ggplotly(facet_plot, tooltip = c('x', 'y'))
 ```
+
+
+## Show an interactive table 
