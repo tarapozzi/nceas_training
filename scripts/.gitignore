@@ -1,0 +1,5 @@
+# ignore alaska spatial files
+data/ak_regions
+
+# could also just ignore ALL spatial files
+*.shp
